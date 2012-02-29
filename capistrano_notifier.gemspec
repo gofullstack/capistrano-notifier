@@ -10,8 +10,11 @@ Gem::Specification.new do |gem|
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  gem.name          = "capistrano_notifier"
+  gem.test_files    = `git ls-files -- spec/*`.split("\n")
+  gem.name          = "capistrano-notifier"
   gem.require_paths = ["lib"]
   gem.version       = CapistranoNotifier::VERSION
+
+  gem.add_development_dependency 'guard-rspec'
+  gem.add_development_dependency 'rspec'
 end
