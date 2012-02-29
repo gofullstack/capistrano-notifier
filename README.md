@@ -1,29 +1,38 @@
 # CapistranoNotifier
 
-TODO: Write a gem description
+## Install
 
-## Installation
+In your Gemfile:
 
-Add this line to your application's Gemfile:
+```rb
+gem 'capistrano-notifier'
+```
 
-    gem 'capistrano_notifier'
+and then `bundle install`
 
-And then execute:
+## Configure
 
-    $ bundle
+```rb
+require 'capistrano-notifier'
 
-Or install it yourself as:
+set :notify_method, :test # :smtp, :sendmail, or any other valid ActionMailer delivery method
+set :notify_from, "capistrano@domain.com"
+set :notify_to, ["john@doe.com", "jane@doe.com"]
+set :notify_github_project, "MyCompany/project-name"
 
-    $ gem install capistrano_notifier
+namespace :deploy do
+  desc "Capistrano Notifier"
+  task :notify do
+    Capistrano::Notifier.new(self).perform
+  end
+end
 
-## Usage
+after 'deploy', 'deploy:notify'
+```
 
-TODO: Write usage instructions here
+## Test
 
-## Contributing
+```sh
+cap deploy:notify
+```
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
