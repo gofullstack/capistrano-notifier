@@ -1,2 +1,2 @@
-require "capistrano_notifier"
+require "capistrano-notifier"
 
