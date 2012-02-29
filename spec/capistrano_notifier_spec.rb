@@ -1,6 +1,5 @@
 require "spec_helper"
 
-describe CapistranoNotifier do
-  it { should be_a Module }
+describe Capistrano::Notifier do
+  it { described_class.should be_a Class }
 end
-
