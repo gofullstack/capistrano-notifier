@@ -2,6 +2,12 @@ require "action_mailer"
 require "active_support"
 require "capistrano_notifier/version"
 
+Capistrano::Configuration::Namespaces::Namespace.class_eval do
+  def capture(*args)
+    parent.capture *args
+  end
+end
+
 module Capistrano
   class Notifier
     def initialize(capistrano)
