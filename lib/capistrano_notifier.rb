@@ -35,17 +35,17 @@ module Capistrano
     end
 
     def body
-  <<-BODY
-  #{user} deployed
-  #{application} branch
-  #{branch} to
-  #{stage} on
-  #{now.strftime("%m/%d/%Y")} at
-  #{now.strftime("%I:%M %p %Z")}
+<<-BODY
+#{user} deployed
+#{application} branch
+#{branch} to
+#{stage} on
+#{now.strftime("%m/%d/%Y")} at
+#{now.strftime("%I:%M %p %Z")}
 
-  #{git_range}
-  #{git_log}
-  BODY
+#{git_range}
+#{git_log}
+BODY
     end
 
     def branch
