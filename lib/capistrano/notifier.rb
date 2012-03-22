@@ -1,6 +1,6 @@
 require "action_mailer"
 require "active_support"
-require "capistrano_notifier/version"
+require 'capistrano/notifier/version'
 
 Capistrano::Configuration::Namespaces::Namespace.class_eval do
   def capture(*args)
