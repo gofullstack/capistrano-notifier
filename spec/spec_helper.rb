@@ -1,2 +1,3 @@
-require "capistrano-notifier"
+require 'capistrano'
+require 'capistrano/notifier'
 
