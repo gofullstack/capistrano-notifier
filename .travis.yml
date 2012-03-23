@@ -6,4 +6,7 @@ rvm:
   - rbx
   - ree
   - ruby-head
+notifications:
+  email:
+    - sysadmin@cramerdev.com
 
