@@ -2,6 +2,8 @@ require "action_mailer"
 require "active_support"
 require 'capistrano/notifier/version'
 
+# Band-aid for issue with Capistrano
+# https://github.com/capistrano/capistrano/issues/168#issuecomment-4144687
 Capistrano::Configuration::Namespaces::Namespace.class_eval do
   def capture(*args)
     parent.capture *args
