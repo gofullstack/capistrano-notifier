@@ -13,7 +13,7 @@ and then `bundle install`
 ## Configure
 
 ```rb
-require 'capistrano-notifier'
+require 'capistrano/notifier'
 
 set :notify_method, :test # :smtp, :sendmail, or any other valid ActionMailer delivery method
 set :notify_from, "capistrano@domain.com"
