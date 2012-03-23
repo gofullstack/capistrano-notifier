@@ -3,17 +3,18 @@ require 'capistrano'
 require 'capistrano/notifier'
 
 module Capistrano::Notifier::StatsD
-  def self.extended(configuration)
+  def self.load_into(configuration)
+    configuration.set(:notifier, self)
     configuration.load do
       namespace :deploy do
         namespace :notify do
           desc 'Notify StatsD of deploy.'
           task :statsd do
-            options = get_options(
-              capture("cat #{release_path}/config/stats.yml"),
+            options = notifier.get_options(
+              capture("cat #{current_path}/config/stats.yml"),
               configuration
             )
-            run "echo '#{application}.#{stage + '.' if stage}deploy:1|c' > nc -w 1 -u #{options[:host]} #{options[:port]}"
+            run "echo #{application}.#{stage + '.' if stage}deploy:1\\|c | nc -w 1 -u #{options[:host]} #{options[:port]}"
           end
         end
       end
@@ -35,5 +36,5 @@ module Capistrano::Notifier::StatsD
 end
 
 if Capistrano::Configuration.instance
-  Capistrano::Configuration.instance.extend(Capistrano::Configuration.instance)
+  Capistrano::Notifier::StatsD.load_into(Capistrano::Configuration.instance)
 end
