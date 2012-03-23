@@ -1,4 +1,4 @@
-# CapistranoNotifier
+# CapistranoNotifier [![Build Status](https://secure.travis-ci.org/cramerdev/capistrano-notifier.png)](https://secure.travis-ci.org/cramerdev/capistrano-notifier)
 
 ## Install
 
