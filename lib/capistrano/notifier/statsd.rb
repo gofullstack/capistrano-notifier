@@ -1,4 +1,5 @@
 require 'yaml'
+require 'active_support'
 require 'capistrano'
 require 'capistrano/notifier'
 
