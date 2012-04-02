@@ -24,8 +24,8 @@ module Capistrano::Notifier::StatsD
     end
   end
 
-  def self.get_options(yaml = "", configuration)
-    yaml = (YAML.load(yaml) || {}).symbolize_keys
+  def self.get_options(file, configuration)
+    yaml = (YAML.load(file) || {}).symbolize_keys
     # Use the staging key if we have it
     if configuration.exists?(:stage)
       yaml = yaml[configuration.fetch(:stage).to_sym].symbolize_keys
