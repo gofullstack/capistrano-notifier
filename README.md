@@ -1,4 +1,4 @@
-# CapistranoNotifier [![Build Status](https://secure.travis-ci.org/cramerdev/capistrano-notifier.png)](https://secure.travis-ci.org/cramerdev/capistrano-notifier)
+# Capistrano Notifier [![Build Status](https://secure.travis-ci.org/cramerdev/capistrano-notifier.png)](https://secure.travis-ci.org/cramerdev/capistrano-notifier)
 
 ## Install
 
@@ -10,10 +10,12 @@ gem 'capistrano-notifier'
 
 and then `bundle install`
 
-## Configure
+## Mail
+
+### Configure
 
 ```rb
-require 'capistrano/notifier'
+require 'capistrano/notifier/mail'
 
 set :notify_method, :test # :smtp, :sendmail, or any other valid ActionMailer delivery method
 set :notify_from, "capistrano@domain.com"
@@ -30,13 +32,13 @@ end
 after 'deploy', 'deploy:notify'
 ```
 
-## Test
+### Test
 
 ```sh
 cap deploy:notify
 ```
 
-### StatsD
+## StatsD
 
 To notify StatsD, `require 'capistrano/notifier/statsd'` in your deploy.rb. When deploying it will look for a config/stats.yml and load the host and port from there. It should use the stages if you're using multistage.
 
