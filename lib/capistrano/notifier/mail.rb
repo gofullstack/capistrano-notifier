@@ -63,7 +63,7 @@ module Capistrano
       end
 
       def from
-        cap.notify_from
+        cap.notifier_mail_options[:from]
       end
 
       def git_log
@@ -87,7 +87,7 @@ module Capistrano
       end
 
       def github_project
-        cap.notify_github_project
+        cap.notifier_mail_options[:github_project]
       end
 
       def html
@@ -103,7 +103,7 @@ module Capistrano
       end
 
       def notify_method
-        cap.notify_method
+        cap.notifier_mail_options[:method]
       end
 
       def now
@@ -123,7 +123,7 @@ module Capistrano
       end
 
       def to
-        cap.notify_to
+        cap.notifier_mail_options[:to]
       end
 
       def user
@@ -133,4 +133,3 @@ module Capistrano
     end
   end
 end
-

@@ -17,10 +17,12 @@ and then `bundle install`
 ```rb
 require 'capistrano/notifier/mail'
 
-set :notify_method, :test # :smtp, :sendmail, or any other valid ActionMailer delivery method
-set :notify_from, "capistrano@domain.com"
-set :notify_to, ["john@doe.com", "jane@doe.com"]
-set :notify_github_project, "MyCompany/project-name"
+set :notifier_mail_options, {
+  :method         => :test, # :smtp, :sendmail, or any other valid ActionMailer delivery method
+  :from           => 'capistrano@domain.com',
+  :to             => ['john@doe.com', 'jane@doe.com'],
+  :github_project => 'MyCompany/project-name'
+}
 
 namespace :deploy do
   desc "Capistrano Notifier"
