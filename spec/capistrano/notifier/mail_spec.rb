@@ -1,10 +1,12 @@
-require "spec_helper"
+require 'spec_helper'
 require 'capistrano/notifier/mail'
 
 describe Capistrano::Notifier::Mail do
-  before do
-    @configuration = Capistrano::Configuration.new
-    @configuration.load do |configuration|
+  let(:configuration) { Capistrano::Configuration.new }
+  subject { described_class.new configuration }
+
+  before :each do
+    configuration.load do |configuration|
       set :notifier_mail_options, {
         :github_project => 'example/example',
         :method         => :sendmail,
@@ -12,24 +14,10 @@ describe Capistrano::Notifier::Mail do
         :to             => 'example@example.com'
       }
     end
-    @notifier = described_class.new(@configuration)
   end
 
-  it { described_class.should be_a Class }
-
-  specify 'github_project' do
-    @notifier.send(:github_project).should === 'example/example'
-  end
-
-  specify 'notify_method' do
-    @notifier.send(:notify_method).should === :sendmail
-  end
-
-  specify 'from' do
-    @notifier.send(:from).should === 'sender@example.com'
-  end
-
-  specify 'to' do
-    @notifier.send(:to).should === 'example@example.com'
-  end
+  it { subject.send(:github_project).should == 'example/example' }
+  it { subject.send(:notify_method).should  == :sendmail }
+  it { subject.send(:from).should           == 'sender@example.com' }
+  it { subject.send(:to).should             == 'example@example.com' }
 end
