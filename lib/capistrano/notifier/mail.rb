@@ -83,11 +83,11 @@ module Capistrano
       end
 
       def github_prefix
-        "https://github.com/#{github_project}"
+        "https://github.com/#{github}"
       end
 
-      def github_project
-        cap.notifier_mail_options[:github_project]
+      def github
+        cap.notifier_mail_options[:github]
       end
 
       def html
