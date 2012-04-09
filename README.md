@@ -18,10 +18,10 @@ and then `bundle install`
 require 'capistrano/notifier/mail'
 
 set :notifier_mail_options, {
-  :method         => :test, # :smtp, :sendmail, or any other valid ActionMailer delivery method
-  :from           => 'capistrano@domain.com',
-  :to             => ['john@doe.com', 'jane@doe.com'],
-  :github_project => 'MyCompany/project-name'
+  :method => :test, # :smtp, :sendmail, or any other valid ActionMailer delivery method
+  :from   => 'capistrano@domain.com',
+  :to     => ['john@doe.com', 'jane@doe.com'],
+  :github => 'MyCompany/project-name'
 }
 
 namespace :deploy do
