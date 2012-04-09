@@ -1,6 +1,6 @@
-require 'capistrano/notifier/version'
+require 'active_support'
+require 'capistrano'
+require 'yaml'
 
-module Capistrano
-  module Notifier
-  end
-end
+require 'capistrano/notifier/base'
+

@@ -1,21 +1,8 @@
-require "action_mailer"
-require "active_support"
-
-# Band-aid for issue with Capistrano
-# https://github.com/capistrano/capistrano/issues/168#issuecomment-4144687
-Capistrano::Configuration::Namespaces::Namespace.class_eval do
-  def capture(*args)
-    parent.capture *args
-  end
-end
+require 'action_mailer'
 
 module Capistrano
   module Notifier
-    class Mail
-      def initialize(capistrano)
-        @cap = capistrano
-      end
-
+    class Mail < Base
       def perform
         mail = ActionMailer::Base.mail({
           :body => text,
@@ -32,46 +19,22 @@ module Capistrano
 
       private
 
-      def application
-        cap.application.titleize
-      end
-
       def body
-  <<-BODY
-  #{user} deployed
-  #{application} branch
-  #{branch} to
-  #{stage} on
-  #{now.strftime("%m/%d/%Y")} at
-  #{now.strftime("%I:%M %p %Z")}
+        <<-BODY.gsub(/^ {10}/, '')
+          #{user} deployed
+          #{application} branch
+          #{branch} to
+          #{stage} on
+          #{now.strftime("%m/%d/%Y")} at
+          #{now.strftime("%I:%M %p %Z")}
 
-  #{git_range}
-  #{git_log}
-  BODY
-      end
-
-      def branch
-        cap.branch
-      end
-
-      def cap
-        @cap
-      end
-
-      def current_revision
-        cap.current_revision[0,7]
+          #{git_range}
+          #{git_log}
+        BODY
       end
 
       def from
         cap.notifier_mail_options[:from]
-      end
-
-      def git_log
-        `git log #{git_range} --no-merges --format=format:"%h %s (%an)"`
-      end
-
-      def git_range
-        "#{previous_revision}..#{current_revision}"
       end
 
       def github_commit_prefix
@@ -98,21 +61,10 @@ module Capistrano
         )
       end
 
-      def previous_revision
-        cap.previous_revision[0,7]
-      end
-
       def notify_method
         cap.notifier_mail_options[:method]
       end
 
-      def now
-        @now ||= Time.new
-      end
-
-      def stage
-        cap.stage
-      end
 
       def subject
         "#{user} deployed #{application}@#{branch} to #{stage}"
@@ -124,11 +76,6 @@ module Capistrano
 
       def to
         cap.notifier_mail_options[:to]
-      end
-
-      def user
-        user = ENV['DEPLOYER']
-        user = `git config --get user.name`.strip if user.nil?
       end
     end
   end

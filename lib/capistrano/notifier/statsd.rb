@@ -1,8 +1,3 @@
-require 'yaml'
-require 'active_support'
-require 'capistrano'
-require 'capistrano/notifier'
-
 module Capistrano::Notifier::StatsD
   def self.load_into(configuration)
     configuration.set(:notifier, self)
