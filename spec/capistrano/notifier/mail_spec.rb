@@ -6,10 +6,10 @@ describe Capistrano::Notifier::Mail do
     @configuration = Capistrano::Configuration.new
     @configuration.load do |configuration|
       set :notifier_mail_options, {
-        :github_project => 'example/example',
-        :method         => :sendmail,
-        :from           => 'sender@example.com',
-        :to             => 'example@example.com'
+        :github => 'example/example',
+        :method => :sendmail,
+        :from   => 'sender@example.com',
+        :to     => 'example@example.com'
       }
     end
     @notifier = described_class.new(@configuration)
@@ -18,7 +18,7 @@ describe Capistrano::Notifier::Mail do
   it { described_class.should be_a Class }
 
   specify 'github_project' do
-    @notifier.send(:github_project).should === 'example/example'
+    @notifier.send(:github).should === 'example/example'
   end
 
   specify 'notify_method' do
