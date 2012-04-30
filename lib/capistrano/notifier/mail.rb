@@ -1,6 +1,21 @@
 require 'action_mailer'
 
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
+  def self.load_into(configuration)
+    configuration.load do
+      namespace :deploy do
+        namespace :notify do
+          desc 'Send a deployment notification via email.'
+          task :statsd do
+            Capistrano::Notifier::Mail.new(configuration).perform
+          end
+        end
+      end
+
+      after 'deploy', 'deploy:notify:mail'
+    end
+  end
+
   def perform
     mail = ActionMailer::Base.mail({
       :body => text,
@@ -74,4 +89,8 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   def to
     cap.notifier_mail_options[:to]
   end
+end
+
+if Capistrano::Configuration.instance
+  Capistrano::Notifier::Mail.load_into(Capistrano::Configuration.instance)
 end
