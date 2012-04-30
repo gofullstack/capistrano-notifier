@@ -38,9 +38,9 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
 
   def packet
     if stage
-      "#{application}.#{stage}.deploy:1"
+      "#{application}.#{stage}.deploy:1|c"
     else
-      "#{application}.deploy:1"
+      "#{application}.deploy:1|c"
     end
   end
 

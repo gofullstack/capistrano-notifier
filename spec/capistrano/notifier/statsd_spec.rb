@@ -17,12 +17,12 @@ describe Capistrano::Notifier::StatsD do
   end
 
   it "creates a packet" do
-    subject.send(:packet).should == "example.deploy:1"
+    subject.send(:packet).should == "example.deploy:1|c"
   end
 
   it "sends a packet" do
     UDPSocket.any_instance.should_receive(:send).once.with(
-      "example.deploy:1", 0, "127.0.0.1", "8125"
+      "example.deploy:1|c", 0, "127.0.0.1", "8125"
     )
 
     subject.perform
@@ -37,7 +37,7 @@ describe Capistrano::Notifier::StatsD do
     end
 
     it "creates a packet" do
-      subject.send(:packet).should == "example.test.deploy:1"
+      subject.send(:packet).should == "example.test.deploy:1|c"
     end
   end
 
