@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'capistrano/notifier/mail'
 
 describe Capistrano::Notifier::Mail do
-
   let(:configuration) { Capistrano::Configuration.new }
   subject { described_class.new configuration }
 
@@ -18,10 +17,16 @@ describe Capistrano::Notifier::Mail do
       set :application, 'example'
       set :branch,      'master'
       set :stage,       'test'
-      
-      set :current_revision,  '1234567'
-      set :previous_revision, '890abcd'
+
+      set :current_revision,  '12345670000000000000000000000000'
+      set :previous_revision, '890abcd0000000000000000000000000'
     end
+
+    subject.stub(:git_log).and_return <<-LOG.gsub /^ {6}/, ''
+      1234567 This is the current commit (John Doe)
+      890abcd This is the previous commit (John Doe)
+    LOG
+    subject.stub(:user_name).and_return "John Doe"
   end
 
   it { subject.send(:github).should         == 'example/example' }
@@ -31,7 +36,7 @@ describe Capistrano::Notifier::Mail do
 
   it "renders a plaintext email" do
     subject.send(:body).should == <<-BODY.gsub(/^ {6}/, '')
-      Justin Campbell deployed
+      John Doe deployed
       Example branch
       master to
       test on
@@ -39,6 +44,8 @@ describe Capistrano::Notifier::Mail do
       12:00 AM EST
 
       890abcd..1234567
+      1234567 This is the current commit (John Doe)
+      890abcd This is the previous commit (John Doe)
 
     BODY
   end

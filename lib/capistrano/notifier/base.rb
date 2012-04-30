@@ -1,53 +1,49 @@
-module Capistrano
-  module Notifier
-    class Base
-      def initialize(capistrano)
-        @cap = capistrano
-      end
+class Capistrano::Notifier::Base
+  def initialize(capistrano)
+    @cap = capistrano
+  end
 
-      private
+  private
 
-      def application
-        cap.application.titleize
-      end
+  def application
+    cap.application.titleize
+  end
 
-      def branch
-        cap.branch
-      end
+  def branch
+    cap.branch
+  end
 
-      def cap
-        @cap
-      end
+  def cap
+    @cap
+  end
 
-      def current_revision
-        cap.current_revision[0,7]
-      end
+  def git_current_revision
+    cap.current_revision[0,7]
+  end
 
-      def git_log
-        `git log #{git_range} --no-merges --format=format:"%h %s (%an)"`
-      end
+  def git_log
+    `git log #{git_range} --no-merges --format=format:"%h %s (%an)"`
+  end
 
-      def git_range
-        "#{previous_revision}..#{current_revision}"
-      end
+  def git_previous_revision
+    cap.previous_revision[0,7]
+  end
 
-      def previous_revision
-        cap.previous_revision[0,7]
-      end
+  def git_range
+    "#{git_previous_revision}..#{git_current_revision}"
+  end
 
-      def now
-        @now ||= Time.now
-      end
+  def now
+    @now ||= Time.now
+  end
 
-      def stage
-        cap.stage
-      end
+  def stage
+    cap.stage
+  end
 
-      def user
-        user = ENV['DEPLOYER']
-        user = `git config --get user.name`.strip if user.nil?
-      end
-    end
+  def user_name
+    user = ENV['DEPLOYER']
+    user = `git config --get user.name`.strip if user.nil?
   end
 end
 
