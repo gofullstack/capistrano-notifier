@@ -9,7 +9,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
         namespace :notify do
           desc 'Notify StatsD of deploy.'
           task :statsd do
-            Capistrano::Notifier::StatsD.new.perform
+            Capistrano::Notifier::StatsD.new(configuration).perform
           end
         end
       end
