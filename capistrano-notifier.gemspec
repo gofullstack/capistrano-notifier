@@ -15,10 +15,11 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Capistrano::Notifier::VERSION
 
-  gem.add_dependency 'capistrano', '>= 2'
   gem.add_dependency 'actionmailer'
   gem.add_dependency 'activesupport'
+  gem.add_dependency 'capistrano', '>= 2'
 
   gem.add_development_dependency 'guard-rspec'
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'timecop'
 end
