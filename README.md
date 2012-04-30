@@ -1,5 +1,6 @@
 # Capistrano Notifier [![Build Status](https://secure.travis-ci.org/cramerdev/capistrano-notifier.png)](https://secure.travis-ci.org/cramerdev/capistrano-notifier)
 
+
 ## Install
 
 In your Gemfile:
@@ -10,9 +11,8 @@ gem 'capistrano-notifier'
 
 and then `bundle install`
 
-## Mail
 
-### Configure
+## Mail
 
 ```rb
 require 'capistrano/notifier/mail'
@@ -23,22 +23,11 @@ set :notifier_mail_options, {
   :to     => ['john@doe.com', 'jane@doe.com'],
   :github => 'MyCompany/project-name'
 }
-
-namespace :deploy do
-  desc "Capistrano Notifier"
-  task :notify do
-    Capistrano::Notifier.new(self).perform
-  end
-end
-
-after 'deploy', 'deploy:notify'
 ```
 
-### Test
+If you specified `:method => test`, you can see the email that would be
+generated in your console with `cap deploy:notify`.
 
-```sh
-cap deploy:notify
-```
 
 ## StatsD
 
