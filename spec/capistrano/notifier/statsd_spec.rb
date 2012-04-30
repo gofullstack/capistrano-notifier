@@ -2,50 +2,60 @@ require 'spec_helper'
 require 'capistrano/notifier/statsd'
 
 describe Capistrano::Notifier::StatsD do
-  let(:configuration) { stub 'Capistrano::Configuraton' }
+  let(:configuration) { Capistrano::Configuration.new }
+  subject { described_class.new configuration }
 
-  describe ".get_options" do
-    subject { described_class.get_options file, configuration }
+  before :each do
+    configuration.load do |configuration|
+      set :application, 'example'
+    end
+  end
 
-    let(:file) { "" }
+  it "sets defaults" do
+    subject.send(:host).should == '127.0.0.1'
+    subject.send(:port).should == '8125'
+  end
 
+  it "creates a packet" do
+    subject.send(:packet).should == "example.deploy:1"
+  end
+
+  it "sends a packet" do
+    UDPSocket.any_instance.should_receive(:send).once.with(
+      "example.deploy:1", 0, "127.0.0.1", "8125"
+    )
+
+    subject.perform
+  end
+
+  context "with a stage" do
     before :each do
-      configuration.stub(:exists?).with(:stage).and_return false
+      configuration.load do |configuration|
+        set :application, 'example'
+        set :stage,       'test'
+      end
     end
 
-    context "with no config file" do
-      before :each do
-        File.stub(:exists?).with(file).and_return(false)
-      end
+    it "creates a packet" do
+      subject.send(:packet).should == "example.test.deploy:1"
+    end
+  end
 
-      it { subject[:host].should == "127.0.0.1" }
-      it { subject[:port].should == "8125" }
+  context "with statsd options" do
+    before :each do
+      configuration.load do |configuration|
+        set :notifier_statsd_options, {
+          :host => '10.0.0.1',
+          :port => '1234'
+        }
+
+        set :application, 'example'
+      end
     end
 
-    context "with config file" do
-      let(:yaml) { "host: 10.0.0.1\nport: '1234'" }
-
-      before :each do
-        File.stub(:exists?).with(file).and_return(true)
-        YAML.stub(:load_file).with(file).and_return(YAML.load yaml)
-      end
-
-      it { subject[:host].should == "10.0.0.1" }
-      it { subject[:port].should == "1234" }
-    end
-
-    context "with multistage config file" do
-      let(:yaml) { "staging:\n  host: 10.0.0.1\n  port: '1234'" }
-
-      before :each do
-        File.stub(:exists?).with(file).and_return(true)
-        YAML.stub(:load_file).with(file).and_return(YAML.load yaml)
-        configuration.stub(:exists?).with(:stage).and_return true
-        configuration.stub(:fetch).with(:stage).and_return :staging
-      end
-
-      it { subject[:host].should == "10.0.0.1" }
-      it { subject[:port].should == "1234" }
+    it "uses the options" do
+      subject.send(:host).should == '10.0.0.1'
+      subject.send(:port).should == '1234'
     end
   end
 end
