@@ -1,33 +1,51 @@
-require "spec_helper"
+require 'spec_helper'
 require 'capistrano/notifier/statsd'
 
 describe Capistrano::Notifier::StatsD do
-  it { described_class.should be_a Module }
+  let(:configuration) { stub 'Capistrano::Configuraton' }
 
-  specify 'get_options, not multistage' do
-    configuration = double('Capistrano::Configuraton')
-    configuration.stub(:exists?).and_return false
-    yaml =<<EOF
-host: 10.0.0.1
-port: 8125
-EOF
-    options = described_class.get_options(yaml, configuration)
-    options[:host].should === '10.0.0.1'
-    options[:port].should === 8125
+  describe ".get_options" do
+    subject { described_class.get_options file, configuration }
+
+    let(:file) { "" }
+
+    before :each do
+      configuration.stub(:exists?).with(:stage).and_return false
+    end
+
+    context "with no config file" do
+      before :each do
+        File.stub(:exists?).with(file).and_return(false)
+      end
+
+      it { subject[:host].should == "127.0.0.1" }
+      it { subject[:port].should == "8125" }
+    end
+
+    context "with config file" do
+      let(:yaml) { "host: 10.0.0.1\nport: '1234'" }
+
+      before :each do
+        File.stub(:exists?).with(file).and_return(true)
+        YAML.stub(:load_file).with(file).and_return(YAML.load yaml)
+      end
+
+      it { subject[:host].should == "10.0.0.1" }
+      it { subject[:port].should == "1234" }
+    end
+
+    context "with multistage config file" do
+      let(:yaml) { "staging:\n  host: 10.0.0.1\n  port: '1234'" }
+
+      before :each do
+        File.stub(:exists?).with(file).and_return(true)
+        YAML.stub(:load_file).with(file).and_return(YAML.load yaml)
+        configuration.stub(:exists?).with(:stage).and_return true
+        configuration.stub(:fetch).with(:stage).and_return :staging
+      end
+
+      it { subject[:host].should == "10.0.0.1" }
+      it { subject[:port].should == "1234" }
+    end
   end
-
-  specify 'get_options, multistage' do
-    configuration = double('Capistrano::Configuraton')
-    configuration.stub(:exists?).and_return true
-    configuration.stub(:fetch).and_return 'staging'
-    yaml =<<EOF
-staging:
-  host: 10.0.0.1
-  port: 8125
-EOF
-    options = described_class.get_options(yaml, configuration)
-    options[:host].should === '10.0.0.1'
-    options[:port].should === 8125
-  end
-
 end

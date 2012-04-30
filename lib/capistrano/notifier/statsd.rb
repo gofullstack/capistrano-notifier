@@ -7,9 +7,10 @@ module Capistrano::Notifier::StatsD
           desc 'Notify StatsD of deploy.'
           task :statsd do
             options = notifier.get_options(
-              capture("cat #{current_path}/config/stats.yml"),
+              "#{current_path}/config/stats.yml",
               configuration
             )
+
             run "echo #{application}.#{stage + '.' if stage}deploy:1\\|c | nc -w 1 -u #{options[:host]} #{options[:port]}"
           end
         end
@@ -20,14 +21,23 @@ module Capistrano::Notifier::StatsD
   end
 
   def self.get_options(file, configuration)
-    yaml = (YAML.load(file) || {}).symbolize_keys
+    defaults = { :host => "127.0.0.1", :port => "8125" }
+
+    return defaults unless File.exists? file
+
+    yaml = YAML.load_file(file).symbolize_keys
+
     # Use the staging key if we have it
     if configuration.exists?(:stage)
-      yaml = yaml[configuration.fetch(:stage).to_sym].symbolize_keys
+      stage = configuration.fetch(:stage).to_sym
+
+      options = yaml[stage]
+    else
+      options = yaml
     end
-    yaml[:host] ||= '127.0.0.1'
-    yaml[:port] ||= 8125
-    yaml
+
+    options.symbolize_keys!
+    options.reverse_merge! defaults
   end
 end
 
