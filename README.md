@@ -42,6 +42,18 @@ cap deploy:notify
 
 ## StatsD
 
-To notify StatsD, `require 'capistrano/notifier/statsd'` in your deploy.rb. When deploying it will look for a config/stats.yml and load the host and port from there. It should use the stages if you're using multistage.
+```rb
+require 'capistrano/notifier/statsd'
+```
 
-A counter of 1 will be sent with the key application.stage.deploy if using multistage or application.deploy if not. [Netcat](http://netcat.sourceforge.net/) must be installed on the remote machine.
+A counter of 1 will be sent with the key `application.stage.deploy` if using multistage, or `application.deploy` if not.
+
+If you want to specify a host:port other than
+127.0.0.1:8125, you can do so like this:
+
+```rb
+set :notifier_statsd_options, {
+  :host => "10.0.0.1",
+  :port => "8125"
+}
+```
