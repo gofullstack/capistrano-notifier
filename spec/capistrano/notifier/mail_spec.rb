@@ -41,7 +41,7 @@ describe Capistrano::Notifier::Mail do
       master to
       test on
       01/01/2012 at
-      12:00 AM EST
+      12:00 AM #{Time.now.zone}
 
       890abcd..1234567
       1234567 This is the current commit (John Doe)
