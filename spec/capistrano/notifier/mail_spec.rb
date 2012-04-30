@@ -1,35 +1,52 @@
-require "spec_helper"
+require 'spec_helper'
 require 'capistrano/notifier/mail'
 
 describe Capistrano::Notifier::Mail do
-  before do
-    @configuration = Capistrano::Configuration.new
-    @configuration.load do |configuration|
+  let(:configuration) { Capistrano::Configuration.new }
+  subject { described_class.new configuration }
+
+  before :each do
+    configuration.load do |configuration|
       set :notifier_mail_options, {
         :github => 'example/example',
         :method => :sendmail,
         :from   => 'sender@example.com',
         :to     => 'example@example.com'
       }
+
+      set :application, 'example'
+      set :branch,      'master'
+      set :stage,       'test'
+
+      set :current_revision,  '12345670000000000000000000000000'
+      set :previous_revision, '890abcd0000000000000000000000000'
     end
-    @notifier = described_class.new(@configuration)
+
+    subject.stub(:git_log).and_return <<-LOG.gsub /^ {6}/, ''
+      1234567 This is the current commit (John Doe)
+      890abcd This is the previous commit (John Doe)
+    LOG
+    subject.stub(:user_name).and_return "John Doe"
   end
 
-  it { described_class.should be_a Class }
+  it { subject.send(:github).should         == 'example/example' }
+  it { subject.send(:notify_method).should  == :sendmail }
+  it { subject.send(:from).should           == 'sender@example.com' }
+  it { subject.send(:to).should             == 'example@example.com' }
 
-  specify 'github_project' do
-    @notifier.send(:github).should === 'example/example'
-  end
+  it "renders a plaintext email" do
+    subject.send(:body).should == <<-BODY.gsub(/^ {6}/, '')
+      John Doe deployed
+      Example branch
+      master to
+      test on
+      01/01/2012 at
+      12:00 AM #{Time.now.zone}
 
-  specify 'notify_method' do
-    @notifier.send(:notify_method).should === :sendmail
-  end
+      890abcd..1234567
+      1234567 This is the current commit (John Doe)
+      890abcd This is the previous commit (John Doe)
 
-  specify 'from' do
-    @notifier.send(:from).should === 'sender@example.com'
-  end
-
-  specify 'to' do
-    @notifier.send(:to).should === 'example@example.com'
+    BODY
   end
 end
