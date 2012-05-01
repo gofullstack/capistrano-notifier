@@ -14,6 +14,7 @@ describe Capistrano::Notifier::StatsD do
   it "sets defaults" do
     subject.send(:host).should == '127.0.0.1'
     subject.send(:port).should == '8125'
+    subject.send(:with).should == '1|c'
   end
 
   it "creates a packet" do
@@ -57,5 +58,19 @@ describe Capistrano::Notifier::StatsD do
       subject.send(:host).should == '10.0.0.1'
       subject.send(:port).should == '1234'
     end
+  end
+
+  context "with a gauge" do
+    before :each do
+      configuration.load do |configuration|
+        set :notifier_statsd_options, {
+          :with => :gauge
+        }
+
+        set :application, 'example'
+      end
+    end
+
+    it { subject.send(:with).should == "1|g" }
   end
 end
