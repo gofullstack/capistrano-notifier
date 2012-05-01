@@ -1,33 +1,61 @@
-require "spec_helper"
+require 'spec_helper'
 require 'capistrano/notifier/statsd'
 
 describe Capistrano::Notifier::StatsD do
-  it { described_class.should be_a Module }
+  let(:configuration) { Capistrano::Configuration.new }
+  subject { described_class.new configuration }
 
-  specify 'get_options, not multistage' do
-    configuration = double('Capistrano::Configuraton')
-    configuration.stub(:exists?).and_return false
-    yaml =<<EOF
-host: 10.0.0.1
-port: 8125
-EOF
-    options = described_class.get_options(yaml, configuration)
-    options[:host].should === '10.0.0.1'
-    options[:port].should === 8125
+  before :each do
+    configuration.load do |configuration|
+      set :application, 'example'
+    end
   end
 
-  specify 'get_options, multistage' do
-    configuration = double('Capistrano::Configuraton')
-    configuration.stub(:exists?).and_return true
-    configuration.stub(:fetch).and_return 'staging'
-    yaml =<<EOF
-staging:
-  host: 10.0.0.1
-  port: 8125
-EOF
-    options = described_class.get_options(yaml, configuration)
-    options[:host].should === '10.0.0.1'
-    options[:port].should === 8125
+  it "sets defaults" do
+    subject.send(:host).should == '127.0.0.1'
+    subject.send(:port).should == '8125'
   end
 
+  it "creates a packet" do
+    subject.send(:packet).should == "example.deploy:1|c"
+  end
+
+  it "sends a packet" do
+    UDPSocket.any_instance.should_receive(:send).once.with(
+      "example.deploy:1|c", 0, "127.0.0.1", "8125"
+    )
+
+    subject.perform
+  end
+
+  context "with a stage" do
+    before :each do
+      configuration.load do |configuration|
+        set :application, 'example'
+        set :stage,       'test'
+      end
+    end
+
+    it "creates a packet" do
+      subject.send(:packet).should == "example.test.deploy:1|c"
+    end
+  end
+
+  context "with statsd options" do
+    before :each do
+      configuration.load do |configuration|
+        set :notifier_statsd_options, {
+          :host => '10.0.0.1',
+          :port => '1234'
+        }
+
+        set :application, 'example'
+      end
+    end
+
+    it "uses the options" do
+      subject.send(:host).should == '10.0.0.1'
+      subject.send(:port).should == '1234'
+    end
+  end
 end

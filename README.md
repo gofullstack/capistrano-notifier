@@ -1,5 +1,6 @@
 # Capistrano Notifier [![Build Status](https://secure.travis-ci.org/cramerdev/capistrano-notifier.png)](https://secure.travis-ci.org/cramerdev/capistrano-notifier)
 
+
 ## Install
 
 In your Gemfile:
@@ -10,9 +11,8 @@ gem 'capistrano-notifier'
 
 and then `bundle install`
 
-## Mail
 
-### Configure
+## Mail
 
 ```rb
 require 'capistrano/notifier/mail'
@@ -23,25 +23,26 @@ set :notifier_mail_options, {
   :to     => ['john@doe.com', 'jane@doe.com'],
   :github => 'MyCompany/project-name'
 }
-
-namespace :deploy do
-  desc "Capistrano Notifier"
-  task :notify do
-    Capistrano::Notifier.new(self).perform
-  end
-end
-
-after 'deploy', 'deploy:notify'
 ```
 
-### Test
+If you specified `:method => test`, you can see the email that would be
+generated in your console with `cap deploy:notify`.
 
-```sh
-cap deploy:notify
-```
 
 ## StatsD
 
-To notify StatsD, `require 'capistrano/notifier/statsd'` in your deploy.rb. When deploying it will look for a config/stats.yml and load the host and port from there. It should use the stages if you're using multistage.
+```rb
+require 'capistrano/notifier/statsd'
+```
 
-A counter of 1 will be sent with the key application.stage.deploy if using multistage or application.deploy if not. [Netcat](http://netcat.sourceforge.net/) must be installed on the remote machine.
+A counter of 1 will be sent with the key `application.stage.deploy` if using multistage, or `application.deploy` if not.
+
+If you want to specify a host:port other than
+127.0.0.1:8125, you can do so like this:
+
+```rb
+set :notifier_statsd_options, {
+  :host => "10.0.0.1",
+  :port => "8125"
+}
+```

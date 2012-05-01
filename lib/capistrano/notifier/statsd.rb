@@ -1,16 +1,15 @@
-module Capistrano::Notifier::StatsD
+require 'socket'
+
+class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
+  DEFAULTS = { :host => "127.0.0.1", :port => "8125" }
+
   def self.load_into(configuration)
-    configuration.set(:notifier, self)
     configuration.load do
       namespace :deploy do
         namespace :notify do
           desc 'Notify StatsD of deploy.'
           task :statsd do
-            options = notifier.get_options(
-              capture("cat #{current_path}/config/stats.yml"),
-              configuration
-            )
-            run "echo #{application}.#{stage + '.' if stage}deploy:1\\|c | nc -w 1 -u #{options[:host]} #{options[:port]}"
+            Capistrano::Notifier::StatsD.new(configuration).perform
           end
         end
       end
@@ -19,15 +18,38 @@ module Capistrano::Notifier::StatsD
     end
   end
 
-  def self.get_options(file, configuration)
-    yaml = (YAML.load(file) || {}).symbolize_keys
-    # Use the staging key if we have it
-    if configuration.exists?(:stage)
-      yaml = yaml[configuration.fetch(:stage).to_sym].symbolize_keys
+  def perform
+    socket.send packet, 0, host, port
+  end
+
+  private
+
+  def host
+    options[:host]
+  end
+
+  def options
+    if cap.respond_to? :notifier_statsd_options
+      cap.notifier_statsd_options.reverse_merge DEFAULTS
+    else
+      DEFAULTS
     end
-    yaml[:host] ||= '127.0.0.1'
-    yaml[:port] ||= 8125
-    yaml
+  end
+
+  def packet
+    if stage
+      "#{application}.#{stage}.deploy:1|c"
+    else
+      "#{application}.deploy:1|c"
+    end
+  end
+
+  def port
+    options[:port]
+  end
+
+  def socket
+    @socket ||= UDPSocket.new
   end
 end
 

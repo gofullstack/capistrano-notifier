@@ -6,6 +6,10 @@ class Capistrano::Notifier::Base
   private
 
   def application
+    cap.application
+  end
+
+  def application_name
     cap.application.titleize
   end
 
@@ -38,7 +42,7 @@ class Capistrano::Notifier::Base
   end
 
   def stage
-    cap.stage
+    cap.stage if cap.respond_to? :stage
   end
 
   def user_name
