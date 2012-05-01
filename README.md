@@ -35,7 +35,15 @@ generated in your console with `cap deploy:notify`.
 require 'capistrano/notifier/statsd'
 ```
 
-A counter of 1 will be sent with the key `application.stage.deploy` if using multistage, or `application.deploy` if not.
+A counter of 1 will be sent with the key `application.stage.deploy` if using
+multistage, or `application.deploy` if not. To use a gauge instead of a counter,
+use `:with => :gauge`:
+
+```rb
+set :notifier_statsd_options, {
+  :with => :gauge
+}
+```
 
 If you want to specify a host:port other than
 127.0.0.1:8125, you can do so like this:

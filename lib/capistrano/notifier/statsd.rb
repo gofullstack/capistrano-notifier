@@ -1,7 +1,7 @@
 require 'socket'
 
 class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
-  DEFAULTS = { :host => "127.0.0.1", :port => "8125" }
+  DEFAULTS = { :host => "127.0.0.1", :port => "8125", :with => :counter }
 
   def self.load_into(configuration)
     configuration.load do
@@ -38,9 +38,9 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
 
   def packet
     if stage
-      "#{application}.#{stage}.deploy:1|c"
+      "#{application}.#{stage}.deploy:#{with}"
     else
-      "#{application}.deploy:1|c"
+      "#{application}.deploy:#{with}"
     end
   end
 
@@ -50,6 +50,13 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
 
   def socket
     @socket ||= UDPSocket.new
+  end
+
+  def with
+    case options[:with]
+    when :counter then "1|c"
+    when :gauge   then "1|g"
+    end
   end
 end
 
