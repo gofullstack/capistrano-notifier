@@ -68,11 +68,20 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def html
-    body.gsub(
-      /([0-9a-f]{7})\.\.([0-9a-f]{7})/, "<a href=\"#{github_compare_prefix}/\\1...\\2\">\\1..\\2</a>"
-    ).gsub(
-      /^([0-9a-f]{7})/, "<a href=\"#{github_commit_prefix}/\\0\">\\0</a>"
-    )
+    if gitub.nil?
+      body
+    else
+      body.gsub(
+        /([0-9a-f]{7})\.\.([0-9a-f]{7})/, "<a href=\"#{github_compare_prefix}/\\1...\\2\">\\1..\\2</a>"
+      ).gsub(
+        /^([0-9a-f]{7})/, "<a href=\"#{github_commit_prefix}/\\0\">\\0</a>"
+      )
+    end
+  end
+
+  def text
+    body.gsub(/([0-9a-f]{7})\.\.([0-9a-f]{7})/, "#{github_compare_prefix}/\\1...\\2") unless gitub.nil?
+    body
   end
 
   def notify_method
@@ -81,10 +90,6 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
 
   def subject
     "#{application.titleize} branch #{branch} deployed to #{stage}"
-  end
-
-  def text
-    body.gsub(/([0-9a-f]{7})\.\.([0-9a-f]{7})/, "#{github_compare_prefix}/\\1...\\2")
   end
 
   def to
