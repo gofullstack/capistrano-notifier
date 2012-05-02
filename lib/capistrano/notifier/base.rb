@@ -1,3 +1,5 @@
+require 'capistrano/notifier'
+
 class Capistrano::Notifier::Base
   def initialize(capistrano)
     @cap = capistrano

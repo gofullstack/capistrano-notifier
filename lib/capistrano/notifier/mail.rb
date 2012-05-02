@@ -1,4 +1,4 @@
-require 'capistrano/notifier'
+require 'capistrano/notifier/base'
 require 'action_mailer'
 
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
