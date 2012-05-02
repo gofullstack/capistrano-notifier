@@ -4,8 +4,8 @@ require File.expand_path('../lib/capistrano/notifier/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Campbell", "Nathan L Smith"]
   gem.email         = ["sysadmin@cramerdev.com"]
-  gem.description   = %q{Capistrano Notifier}
   gem.summary       = %q{Capistrano Notifier}
+  gem.description   = %q{Simple notification hooks for Capistrano}
   gem.homepage      = "http://github.com/cramerdev/capistrano-notifier"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
