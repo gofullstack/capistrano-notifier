@@ -1,3 +1,4 @@
+require 'capistrano/notifier'
 require 'socket'
 
 class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base

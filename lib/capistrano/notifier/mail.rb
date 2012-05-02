@@ -1,3 +1,4 @@
+require 'capistrano/notifier'
 require 'action_mailer'
 
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
@@ -6,7 +7,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
       namespace :deploy do
         namespace :notify do
           desc 'Send a deployment notification via email.'
-          task :statsd do
+          task :mail do
             Capistrano::Notifier::Mail.new(configuration).perform
           end
         end

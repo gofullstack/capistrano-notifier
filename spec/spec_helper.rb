@@ -1,5 +1,3 @@
-require 'capistrano'
-require 'capistrano/notifier'
 require 'timecop'
 
 RSpec.configure do |config|
