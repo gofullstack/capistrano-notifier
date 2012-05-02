@@ -6,9 +6,7 @@ describe Capistrano::Notifier::StatsD do
   subject { described_class.new configuration }
 
   before :each do
-    configuration.load do |configuration|
-      set :application, 'example'
-    end
+    configuration.load { set :application, 'example' }
   end
 
   it "sets defaults" do
@@ -31,7 +29,7 @@ describe Capistrano::Notifier::StatsD do
 
   context "with a stage" do
     before :each do
-      configuration.load do |configuration|
+      configuration.load do
         set :application, 'example'
         set :stage,       'test'
       end
@@ -44,7 +42,7 @@ describe Capistrano::Notifier::StatsD do
 
   context "with statsd options" do
     before :each do
-      configuration.load do |configuration|
+      configuration.load do
         set :notifier_statsd_options, {
           :host => '10.0.0.1',
           :port => '1234'
@@ -62,7 +60,7 @@ describe Capistrano::Notifier::StatsD do
 
   context "with a gauge" do
     before :each do
-      configuration.load do |configuration|
+      configuration.load do
         set :notifier_statsd_options, {
           :with => :gauge
         }
@@ -76,9 +74,7 @@ describe Capistrano::Notifier::StatsD do
 
   context "with an uppercase application" do
     before :each do
-      configuration.load do
-        set :application, 'Example'
-      end
+      configuration.load { set :application, 'Example' }
 
       it "lowercases the application" do
         subject.send(:packet).should == "example.deploy:1|c"
