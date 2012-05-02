@@ -9,10 +9,6 @@ class Capistrano::Notifier::Base
     cap.application
   end
 
-  def application_name
-    cap.application.titleize
-  end
-
   def branch
     cap.branch
   end

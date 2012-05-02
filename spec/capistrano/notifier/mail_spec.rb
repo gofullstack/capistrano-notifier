@@ -34,6 +34,10 @@ describe Capistrano::Notifier::Mail do
   it { subject.send(:from).should           == 'sender@example.com' }
   it { subject.send(:to).should             == 'example@example.com' }
 
+  it "creates a subject" do
+    subject.send(:subject).should == "Example branch master deployed to test"
+  end
+
   it "renders a plaintext email" do
     subject.send(:body).should == <<-BODY.gsub(/^ {6}/, '')
       John Doe deployed
