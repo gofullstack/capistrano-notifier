@@ -35,7 +35,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   def body
     <<-BODY.gsub(/^ {6}/, '')
       #{user_name} deployed
-      #{application_name} branch
+      #{application.titleize} branch
       #{branch} to
       #{stage} on
       #{now.strftime("%m/%d/%Y")} at
@@ -79,7 +79,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def subject
-    "#{application} branch #{branch} deployed to #{stage}"
+    "#{application.titleize} branch #{branch} deployed to #{stage}"
   end
 
   def text

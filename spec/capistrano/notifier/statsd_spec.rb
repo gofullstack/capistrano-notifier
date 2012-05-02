@@ -73,4 +73,16 @@ describe Capistrano::Notifier::StatsD do
 
     it { subject.send(:with).should == "1|g" }
   end
+
+  context "with an uppercase application" do
+    before :each do
+      configuration.load do
+        set :application, 'Example'
+      end
+
+      it "lowercases the application" do
+        subject.send(:packet).should == "example.deploy:1|c"
+      end
+    end
+  end
 end
