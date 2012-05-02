@@ -11,6 +11,11 @@ gem 'capistrano-notifier'
 
 and then `bundle install`
 
+`cap` needs to be invoked with Bundler for the `require` statements
+below to work properly. You can do so with either `bundle exec cap`, or
+with `bundle install --binstubs` and making sure `bin` is high up in your
+`$PATH`.`
+
 
 ## Mail
 
