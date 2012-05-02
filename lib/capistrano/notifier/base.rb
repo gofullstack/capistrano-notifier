@@ -10,7 +10,7 @@ class Capistrano::Notifier::Base
   end
 
   def branch
-    cap.branch
+    cap.respond_to?(:branch) ? cap.branch : 'master'
   end
 
   def cap
