@@ -15,7 +15,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
         end
       end
 
-      after 'deploy', 'deploy:notify:statsd'
+      after 'deploy:restart', 'deploy:notify:statsd'
     end
   end
 

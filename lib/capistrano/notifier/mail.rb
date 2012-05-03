@@ -13,7 +13,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
         end
       end
 
-      after 'deploy', 'deploy:notify:mail'
+      after 'deploy:restart', 'deploy:notify:mail'
     end
   end
 
