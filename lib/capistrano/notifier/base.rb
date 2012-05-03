@@ -18,18 +18,22 @@ class Capistrano::Notifier::Base
   end
 
   def git_current_revision
-    cap.current_revision[0,7]
+    cap.current_revision[0,7] if cap.respond_to? :current_revision
   end
 
   def git_log
+    return unless git_range
+
     `git log #{git_range} --no-merges --format=format:"%h %s (%an)"`
   end
 
   def git_previous_revision
-    cap.previous_revision[0,7]
+    cap.previous_revision[0,7] if cap.respond_to? :previous_revision
   end
 
   def git_range
+    return unless git_previous_revision && git_current_revision
+
     "#{git_previous_revision}..#{git_current_revision}"
   end
 
