@@ -21,4 +21,13 @@ describe Capistrano::Notifier::Base do
       end
     end
   end
+
+  describe "#git_*" do
+    context "on initial deploy" do
+      it { subject.send(:git_log).should be_nil }
+      it { subject.send(:git_range).should be_nil }
+      it { subject.send(:git_current_revision).should be_nil }
+      it { subject.send(:git_previous_revision).should be_nil }
+    end
+  end
 end
