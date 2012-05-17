@@ -31,7 +31,7 @@ set :notifier_mail_options, {
 ```
 
 If you specified `:method => test`, you can see the email that would be
-generated in your console with `cap deploy:notify`.
+generated in your console with `cap deploy:notify:mail`.
 
 
 ## StatsD
