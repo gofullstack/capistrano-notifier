@@ -18,7 +18,21 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def perform
-    mail = ActionMailer::Base.mail({
+    if Object.const_defined?('ActionMailer') && ActionMailer.const_defined?('Base') && ActionMailer::Base.respond_to?(:mail)
+      perform_with_action_mailer
+    else
+      perform_with_net_smtp
+    end
+  end
+
+  private
+
+  def perform_with_net_smtp
+    # TODO
+  end
+
+  def perform_with_actionmailer
+     mail = ActionMailer::Base.mail({
       :body => text,
       :delivery_method => notify_method,
       :from => from,
@@ -30,8 +44,6 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
 
     puts ActionMailer::Base.deliveries if notify_method == :test
   end
-
-  private
 
   def body
     <<-BODY.gsub(/^ {6}/, '')
