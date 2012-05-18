@@ -1,5 +1,10 @@
 require 'capistrano/notifier'
-require 'action_mailer'
+
+begin
+  require 'action_mailer'
+rescue LoadError => e
+  require 'actionmailer'
+end
 
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   def self.load_into(configuration)
