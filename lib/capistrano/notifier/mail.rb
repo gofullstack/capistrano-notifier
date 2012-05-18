@@ -1,5 +1,10 @@
 require 'capistrano/notifier'
-require 'action_mailer'
+
+begin
+  require 'action_mailer'
+rescue LoadError => e
+  require 'actionmailer'
+end
 
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   def self.load_into(configuration)
@@ -9,6 +14,10 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
           desc 'Send a deployment notification via email.'
           task :mail do
             Capistrano::Notifier::Mail.new(configuration).perform
+
+            if configuration.notifier_mail_options[:method] == :test
+              puts ActionMailer::Base.deliveries
+            end
           end
         end
       end
@@ -18,7 +27,21 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def perform
-    mail = ActionMailer::Base.mail({
+    if defined?(ActionMailer::Base) && ActionMailer::Base.respond_to?(:mail)
+      perform_with_action_mailer
+    else
+      perform_with_net_smtp
+    end
+  end
+
+  private
+
+  def perform_with_net_smtp
+    # TODO
+  end
+
+  def perform_with_action_mailer
+     mail = ActionMailer::Base.mail({
       :body => text,
       :delivery_method => notify_method,
       :from => from,
@@ -27,11 +50,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     })
 
     mail.deliver
-
-    puts ActionMailer::Base.deliveries if notify_method == :test
   end
-
-  private
 
   def body
     <<-BODY.gsub(/^ {6}/, '')
