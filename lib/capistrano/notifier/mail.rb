@@ -14,6 +14,10 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
           desc 'Send a deployment notification via email.'
           task :mail do
             Capistrano::Notifier::Mail.new(configuration).perform
+
+            if configuration.notifier_mail_options[:method] == :test
+              puts ActionMailer::Base.deliveries
+            end
           end
         end
       end
@@ -23,7 +27,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def perform
-    if Object.const_defined?('ActionMailer') && ActionMailer.const_defined?('Base') && ActionMailer::Base.respond_to?(:mail)
+    if defined?(ActionMailer::Base) && ActionMailer::Base.respond_to?(:mail)
       perform_with_action_mailer
     else
       perform_with_net_smtp
@@ -36,7 +40,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     # TODO
   end
 
-  def perform_with_actionmailer
+  def perform_with_action_mailer
      mail = ActionMailer::Base.mail({
       :body => text,
       :delivery_method => notify_method,
@@ -46,8 +50,6 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     })
 
     mail.deliver
-
-    puts ActionMailer::Base.deliveries if notify_method == :test
   end
 
   def body
