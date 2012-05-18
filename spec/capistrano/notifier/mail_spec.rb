@@ -29,6 +29,26 @@ describe Capistrano::Notifier::Mail do
     subject.stub(:user_name).and_return "John Doe"
   end
 
+  it 'delivers mail' do
+    configuration.load do |configuration|
+      set :notifier_mail_options, {
+        :github => 'example/example',
+        :method => :test,
+        :from   => 'sender@example.com',
+        :to     => 'example@example.com'
+      }
+    end
+
+    subject.perform
+
+    last_delivery = ActionMailer::Base.deliveries.last
+
+    last_delivery.to.should include 'example@example.com'
+    last_delivery.from.should include 'sender@example.com'
+
+    ActionMailer::Base.deliveries.clear
+  end
+
   it { subject.send(:github).should         == 'example/example' }
   it { subject.send(:notify_method).should  == :sendmail }
   it { subject.send(:from).should           == 'sender@example.com' }
