@@ -8,7 +8,17 @@ end
 
 class Capistrano::Notifier::Mailer < ActionMailer::Base
 
-  unless respond_to?(:mail)
+  if respond_to?(:mail)
+    def notice(text, from, subject, to, delivery_method)
+      mail({
+        :body => text,
+        :delivery_method => notify_method,
+        :from => from,
+        :subject => subject,
+        :to => to
+      })
+    end
+  else
     def notice(text, from, subject, to)
       body text
       from from
@@ -54,16 +64,9 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     notifier.deliver_notice(text, from, subject, to)
   end
 
-  def perform_with_action_mailer
-     mail = ActionMailer::Base.mail({
-      :body => text,
-      :delivery_method => notify_method,
-      :from => from,
-      :subject => subject,
-      :to => to
-    })
-
-    mail.deliver
+  def perform_with_action_mailer(notifier = Capistrano::Notifier::Mailer)
+    notifier.notice(text, from, subject, to, notify_method)
+    notifier.deliver
   end
 
   def body
