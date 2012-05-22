@@ -6,6 +6,19 @@ rescue LoadError => e
   require 'actionmailer'
 end
 
+class Capistrano::Notifier::Mailer < ActionMailer::Base
+
+  unless respond_to?(:mail)
+    def notice(text, from, subject, to)
+      body text
+      from from
+      subject subject
+      recipients to
+    end
+  end
+
+end
+
 class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   def self.load_into(configuration)
     configuration.load do
@@ -30,14 +43,15 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     if defined?(ActionMailer::Base) && ActionMailer::Base.respond_to?(:mail)
       perform_with_action_mailer
     else
-      perform_with_net_smtp
+      perform_with_legacy_action_mailer
     end
   end
 
   private
 
-  def perform_with_net_smtp
-    # TODO
+  def perform_with_legacy_action_mailer(notifier = Capistrano::Notifier::Mailer)
+    notifier.delivery_method = notify_method
+    notifier.deliver_notice(text, from, subject, to)
   end
 
   def perform_with_action_mailer
