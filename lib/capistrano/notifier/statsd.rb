@@ -10,7 +10,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
         namespace :notify do
           desc 'Notify StatsD of deploy.'
           task :statsd do
-            Capistrano::Notifier::StatsD.new(configuration).perform
+            run Capistrano::Notifier::StatsD.new(configuration).perform
           end
         end
       end
@@ -20,7 +20,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
   end
 
   def perform
-    socket.send packet, 0, host, port
+    "echo #{packet.gsub('|', '\\|')} | nc -w 1 -u #{host} #{port}"
   end
 
   private
@@ -47,10 +47,6 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
 
   def port
     options[:port]
-  end
-
-  def socket
-    @socket ||= UDPSocket.new
   end
 
   def with
