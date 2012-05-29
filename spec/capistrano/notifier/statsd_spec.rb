@@ -20,7 +20,7 @@ describe Capistrano::Notifier::StatsD do
   end
 
   it "creates a command" do
-    subject.perform.should ==
+    subject.command.should ==
       "echo example.deploy:1\\|c | nc -w 1 -u 127.0.0.1 8125"
   end
 

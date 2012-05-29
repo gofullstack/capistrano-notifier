@@ -10,7 +10,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
         namespace :notify do
           desc 'Notify StatsD of deploy.'
           task :statsd do
-            run Capistrano::Notifier::StatsD.new(configuration).perform
+            run Capistrano::Notifier::StatsD.new(configuration).command
           end
         end
       end
@@ -19,7 +19,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
     end
   end
 
-  def perform
+  def command
     "echo #{packet.gsub('|', '\\|')} | nc -w 1 -u #{host} #{port}"
   end
 
