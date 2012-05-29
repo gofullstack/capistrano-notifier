@@ -59,3 +59,5 @@ set :notifier_statsd_options, {
   :port => "8125"
 }
 ```
+
+The `nc` ([Netcat](http://netcat.sourceforge.net/)) command is used to send messages to statsd and must be installed on the remote hosts. This is installed by default on most Unix machines.

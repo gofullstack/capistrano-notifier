@@ -19,12 +19,9 @@ describe Capistrano::Notifier::StatsD do
     subject.send(:packet).should == "example.deploy:1|c"
   end
 
-  it "sends a packet" do
-    UDPSocket.any_instance.should_receive(:send).once.with(
-      "example.deploy:1|c", 0, "127.0.0.1", "8125"
-    )
-
-    subject.perform
+  it "creates a command" do
+    subject.command.should ==
+      "echo example.deploy:1\\|c | nc -w 1 -u 127.0.0.1 8125"
   end
 
   context "with a stage" do
