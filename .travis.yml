@@ -10,6 +10,10 @@ rvm:
   - 1.9.3
   - ruby-head
   - ree
+matrix:
+  exclude:
+    - rvm: ruby-head
+      env: TEST_ENV=rails-2.3
 notifications:
   email:
     - sysadmin@cramerdev.com
