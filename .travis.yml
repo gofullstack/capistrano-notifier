@@ -16,6 +16,7 @@ matrix:
   allow_failures:
     - rvm: jruby
     - rvm: rbx
+    - rvm: ruby-head
   exclude:
     - rvm: ruby-head
       env: TEST_ENV=rails-2.3
