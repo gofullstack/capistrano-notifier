@@ -15,14 +15,14 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Capistrano::Notifier::VERSION
 
-  case ENV['TEST_ENV']
-  when 'rails-2.3'
+  case ENV['RAILS_VERSION']
+  when '2.3'
     gem.add_dependency 'actionmailer', '~> 2.3.0'
-  when 'rails-3.0'
+  when '3.0'
     gem.add_dependency 'actionmailer', '~> 3.0.0'
-  when 'rails-3.1'
+  when '3.1'
     gem.add_dependency 'actionmailer', '~> 3.1.0'
-  when 'rails-3.2'
+  when '3.2'
     gem.add_dependency 'actionmailer', '~> 3.2.0'
   else
     gem.add_dependency 'actionmailer'
