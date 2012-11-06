@@ -21,7 +21,7 @@ describe Capistrano::Notifier::StatsD do
 
   it "creates a command" do
     subject.command.should ==
-      "echo example.deploy:1\\|c | nc -w 1 -u 127.0.0.1 8125"
+      "echo -n example.deploy:1\\|c | nc -w 1 -u 127.0.0.1 8125"
   end
 
   context "with a stage" do

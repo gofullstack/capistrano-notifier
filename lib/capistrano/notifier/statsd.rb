@@ -20,7 +20,7 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
   end
 
   def command
-    "echo #{packet.gsub('|', '\\|')} | nc -w 1 -u #{host} #{port}"
+    "echo -n #{packet.gsub('|', '\\|')} | nc -w 1 -u #{host} #{port}"
   end
 
   private
