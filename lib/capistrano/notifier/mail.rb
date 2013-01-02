@@ -65,6 +65,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def perform_with_action_mailer(notifier = Capistrano::Notifier::Mailer)
+    notifier.smtp_settings = smtp_settings if notify_method == :smtp
     notifier.notice(text, from, subject, to, notify_method).deliver
   end
 
@@ -112,6 +113,10 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
 
   def notify_method
     cap.notifier_mail_options[:method]
+  end
+
+  def smtp_settings
+    cap.notifier_mail_options[:smtp_settings]
   end
 
   def subject
