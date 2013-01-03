@@ -48,11 +48,51 @@ describe Capistrano::Notifier::Mail do
 
     ActionMailer::Base.deliveries.clear
   end
-
+  
   it { subject.send(:github).should         == 'example/example' }
   it { subject.send(:notify_method).should  == :sendmail }
   it { subject.send(:from).should           == 'sender@example.com' }
   it { subject.send(:to).should             == 'example@example.com' }
+
+
+  it 'delivers smtp mail' do
+    configuration.load do |configuration|
+      set :notifier_mail_options, {
+        :github => 'example/example',
+        :method => :test,
+        :from   => 'sender@example.com',
+        :to     => 'example@example.com',
+        :smtp_settings => {
+          address: "smtp.gmail.com",
+          port: 587,
+          domain: "gmail.com",
+          authentication: "plain",
+          enable_starttls_auto: true,
+          user_name: "USERNAME",
+          password: "PASSWORD"
+        }
+      }
+    end
+
+    subject.perform
+
+    subject.send(:smtp_settings).should == {
+      address: "smtp.gmail.com",
+      port: 587,
+      domain: "gmail.com",
+      authentication: "plain",
+      enable_starttls_auto: true,
+      user_name: "USERNAME",
+      password: "PASSWORD"
+    }
+
+    last_delivery = ActionMailer::Base.deliveries.last
+
+    last_delivery.to.should include 'example@example.com'
+    last_delivery.from.should include 'sender@example.com'
+
+    ActionMailer::Base.deliveries.clear
+  end
 
   it "creates a subject" do
     subject.send(:subject).should == "Example branch master deployed to test"
