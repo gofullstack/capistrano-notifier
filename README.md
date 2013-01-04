@@ -30,9 +30,30 @@ set :notifier_mail_options, {
 }
 ```
 
-If you specified `:method => test`, you can see the email that would be
+If you specified `:method => :test`, you can see the email that would be
 generated in your console with `cap deploy:notify:mail`.
 
+If you specified `:method => :smtp`, you can specify `:smtp_settings`
+
+For example:
+
+```rb
+set :notifier_mail_options, {
+  :method => :smtp,
+  :from   => 'capistrano@domain.com',
+  :to     => ['john@doe.com', 'jane@doe.com'],
+  :github => 'MyCompany/project-name',
+  :smtp_settings => {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "gmail.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: MY_USERNAME,
+    password: MY_PASSWORD
+  }
+}
+```
 
 ## StatsD
 
