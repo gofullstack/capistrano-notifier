@@ -63,13 +63,13 @@ describe Capistrano::Notifier::Mail do
         :from   => 'sender@example.com',
         :to     => 'example@example.com',
         :smtp_settings => {
-          address: "smtp.gmail.com",
-          port: 587,
-          domain: "gmail.com",
-          authentication: "plain",
-          enable_starttls_auto: true,
-          user_name: "USERNAME",
-          password: "PASSWORD"
+          :address => "smtp.gmail.com",
+          :port => 587,
+          :domain => "gmail.com",
+          :authentication => "plain",
+          :enable_starttls_auto => true,
+          :user_name => "USERNAME",
+          :password => "PASSWORD"
         }
       }
     end
