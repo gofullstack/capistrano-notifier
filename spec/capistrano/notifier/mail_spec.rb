@@ -77,13 +77,13 @@ describe Capistrano::Notifier::Mail do
     subject.perform
 
     subject.send(:smtp_settings).should == {
-      address: "smtp.gmail.com",
-      port: 587,
-      domain: "gmail.com",
-      authentication: "plain",
-      enable_starttls_auto: true,
-      user_name: "USERNAME",
-      password: "PASSWORD"
+      :address => "smtp.gmail.com",
+      :port => 587,
+      :domain => "gmail.com",
+      :authentication => "plain",
+      :enable_starttls_auto => true,
+      :user_name => "USERNAME",
+      :password => "PASSWORD"
     }
 
     last_delivery = ActionMailer::Base.deliveries.last
