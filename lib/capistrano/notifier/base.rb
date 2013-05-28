@@ -18,7 +18,7 @@ class Capistrano::Notifier::Base
   end
 
   def git_current_revision
-    cap.current_revision[0,7] if cap.respond_to? :current_revision
+    cap.current_revision.try(:[], 0,7) if cap.respond_to?(:current_revision)
   end
 
   def git_log
@@ -28,7 +28,7 @@ class Capistrano::Notifier::Base
   end
 
   def git_previous_revision
-    cap.previous_revision[0,7] if cap.respond_to? :previous_revision
+    cap.previous_revision.try(:[], 0,7) if cap.respond_to?(:previous_revision)
   end
 
   def git_range
