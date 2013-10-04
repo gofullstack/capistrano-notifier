@@ -96,11 +96,17 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def github_prefix
-    "https://github.com/#{github}"
+    prefix = gitlab
+    prefix ||= "https://github.com/#{github}"
+    prefix
   end
 
   def github
     cap.notifier_mail_options[:github]
+  end
+
+  def gitlab
+    cap.notifier_mail_options[:gitlab]
   end
 
   def html
