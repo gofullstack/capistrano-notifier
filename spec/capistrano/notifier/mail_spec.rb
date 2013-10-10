@@ -98,6 +98,27 @@ describe Capistrano::Notifier::Mail do
     subject.send(:subject).should == "Example branch master deployed to test"
   end
 
+  it 'should work with gitlab' do
+    configuration.load do |configuration|
+      set :notifier_mail_options, {
+        :giturl => 'https://my.gitlab.url/',
+      }
+    end
+    
+    subject.send(:git_prefix).should == 'https://my.gitlab.url/'
+  end
+
+  it 'should default to whatever was specified in giturl' do
+    configuration.load do |configuration|
+      set :notifier_mail_options, {
+        :giturl => 'https://my.gitlab.url/',
+        :github => 'example/example'
+      }
+    end
+    
+    subject.send(:git_prefix).should == 'https://my.gitlab.url/'
+  end
+
   it "renders a plaintext email" do
     subject.send(:body).should == <<-BODY.gsub(/^ {6}/, '')
       John Doe deployed
