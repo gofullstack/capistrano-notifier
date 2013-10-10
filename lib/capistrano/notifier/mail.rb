@@ -87,33 +87,31 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     cap.notifier_mail_options[:from]
   end
 
-  def github_commit_prefix
-    "#{github_prefix}/commit"
+  def git_commit_prefix
+    "#{git_prefix}/commit"
   end
 
-  def github_compare_prefix
-    "#{github_prefix}/compare"
+  def git_compare_prefix
+    "#{git_prefix}/compare"
   end
 
-  def github_prefix
-    prefix = gitlab
-    prefix ||= "https://github.com/#{github}"
-    prefix
+  def git_prefix
+    giturl ? giturl : "https://github.com/#{github}"
   end
 
   def github
     cap.notifier_mail_options[:github]
   end
 
-  def gitlab
-    cap.notifier_mail_options[:gitlab]
+  def giturl
+    cap.notifier_mail_options[:giturl]
   end
 
   def html
     body.gsub(
-      /([0-9a-f]{7})\.\.([0-9a-f]{7})/, "<a href=\"#{github_compare_prefix}/\\1...\\2\">\\1..\\2</a>"
+      /([0-9a-f]{7})\.\.([0-9a-f]{7})/, "<a href=\"#{git_compare_prefix}/\\1...\\2\">\\1..\\2</a>"
     ).gsub(
-      /^([0-9a-f]{7})/, "<a href=\"#{github_commit_prefix}/\\0\">\\0</a>"
+      /^([0-9a-f]{7})/, "<a href=\"#{git_commit_prefix}/\\0\">\\0</a>"
     )
   end
 
@@ -130,7 +128,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def text
-    body.gsub(/([0-9a-f]{7})\.\.([0-9a-f]{7})/, "#{github_compare_prefix}/\\1...\\2")
+    body.gsub(/([0-9a-f]{7})\.\.([0-9a-f]{7})/, "#{git_compare_prefix}/\\1...\\2")
   end
 
   def to
