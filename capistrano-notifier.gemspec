@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   end
 
   gem.add_dependency 'activesupport'
-  gem.add_dependency 'capistrano', '>= 2'
+  gem.add_dependency 'capistrano', '>= 2', '< 3'
 
   gem.add_development_dependency 'guard-rspec'
   gem.add_development_dependency 'rspec'
