@@ -78,4 +78,21 @@ describe Capistrano::Notifier::StatsD do
       end
     end
   end
+
+  context "with a pattern" do
+    before :each do
+      configuration.load do
+        set :application, 'example'
+        set :stage,       'test'
+        set :notifier_statsd_options, {
+          :pattern => "#{stage}.deployment.#{application}"
+        }
+      end
+    end
+
+    it "creates a packet" do
+      subject.send(:packet).should == "test.deployment.example:1|c"
+    end
+
+  end
 end
