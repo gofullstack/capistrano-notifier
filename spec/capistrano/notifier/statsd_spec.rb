@@ -41,8 +41,8 @@ describe Capistrano::Notifier::StatsD do
     before :each do
       configuration.load do
         set :notifier_statsd_options, {
-          :host => '10.0.0.1',
-          :port => '1234'
+          host: '10.0.0.1',
+          port: '1234'
         }
 
         set :application, 'example'
@@ -59,7 +59,7 @@ describe Capistrano::Notifier::StatsD do
     before :each do
       configuration.load do
         set :notifier_statsd_options, {
-          :with => :gauge
+          with: :gauge
         }
 
         set :application, 'example'

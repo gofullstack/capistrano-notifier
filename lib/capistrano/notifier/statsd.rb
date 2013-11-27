@@ -2,7 +2,7 @@ require 'capistrano/notifier'
 require 'socket'
 
 class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
-  DEFAULTS = { :host => "127.0.0.1", :port => "8125", :with => :counter }
+  DEFAULTS = { host: "127.0.0.1", port: "8125", with: :counter }
 
   def self.load_into(configuration)
     configuration.load do

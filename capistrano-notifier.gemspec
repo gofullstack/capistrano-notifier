@@ -16,14 +16,10 @@ Gem::Specification.new do |gem|
   gem.version       = Capistrano::Notifier::VERSION
 
   case ENV['RAILS_VERSION']
-  when '2.3'
-    gem.add_dependency 'actionmailer', '~> 2.3.0'
-  when '3.0'
-    gem.add_dependency 'actionmailer', '~> 3.0.0'
-  when '3.1'
-    gem.add_dependency 'actionmailer', '~> 3.1.0'
   when '3.2'
     gem.add_dependency 'actionmailer', '~> 3.2.0'
+  when '4.0'
+    gem.add_dependency 'actionmailer', '~> 4.0.0'
   else
     gem.add_dependency 'actionmailer'
   end
@@ -31,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activesupport'
   gem.add_dependency 'capistrano', '>= 2', '< 3'
 
-  gem.add_development_dependency 'guard-rspec'
+  gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'timecop'
 end
