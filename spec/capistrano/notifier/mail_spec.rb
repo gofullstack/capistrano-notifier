@@ -8,10 +8,10 @@ describe Capistrano::Notifier::Mail do
   before :each do
     configuration.load do |configuration|
       set :notifier_mail_options, {
-        :github => 'example/example',
-        :method => :sendmail,
-        :from   => 'sender@example.com',
-        :to     => 'example@example.com'
+        github: 'example/example',
+        method: :sendmail,
+        from:   'sender@example.com',
+        to:     'example@example.com'
       }
 
       set :application, 'example'
@@ -32,10 +32,10 @@ describe Capistrano::Notifier::Mail do
   it 'delivers mail' do
     configuration.load do |configuration|
       set :notifier_mail_options, {
-        :github => 'example/example',
-        :method => :test,
-        :from   => 'sender@example.com',
-        :to     => 'example@example.com'
+        github: 'example/example',
+        method: :test,
+        from:   'sender@example.com',
+        to:     'example@example.com'
       }
     end
 
@@ -58,18 +58,18 @@ describe Capistrano::Notifier::Mail do
   it 'delivers smtp mail' do
     configuration.load do |configuration|
       set :notifier_mail_options, {
-        :github => 'example/example',
-        :method => :test,
-        :from   => 'sender@example.com',
-        :to     => 'example@example.com',
-        :smtp_settings => {
-          :address => "smtp.gmail.com",
-          :port => 587,
-          :domain => "gmail.com",
-          :authentication => "plain",
-          :enable_starttls_auto => true,
-          :user_name => "USERNAME",
-          :password => "PASSWORD"
+        github: 'example/example',
+        method: :test,
+        from:   'sender@example.com',
+        to:     'example@example.com',
+        smtp_settings: {
+          address: "smtp.gmail.com",
+          port: 587,
+          domain: "gmail.com",
+          authentication: "plain",
+          enable_starttls_auto: true,
+          user_name: "USERNAME",
+          password: "PASSWORD"
         }
       }
     end
@@ -77,13 +77,13 @@ describe Capistrano::Notifier::Mail do
     subject.perform
 
     subject.send(:smtp_settings).should == {
-      :address => "smtp.gmail.com",
-      :port => 587,
-      :domain => "gmail.com",
-      :authentication => "plain",
-      :enable_starttls_auto => true,
-      :user_name => "USERNAME",
-      :password => "PASSWORD"
+      address: "smtp.gmail.com",
+      port: 587,
+      domain: "gmail.com",
+      authentication: "plain",
+      enable_starttls_auto: true,
+      user_name: "USERNAME",
+      password: "PASSWORD"
     }
 
     last_delivery = ActionMailer::Base.deliveries.last
@@ -101,7 +101,7 @@ describe Capistrano::Notifier::Mail do
   it 'should work with gitlab' do
     configuration.load do |configuration|
       set :notifier_mail_options, {
-        :giturl => 'https://my.gitlab.url/',
+        giturl: 'https://my.gitlab.url/',
       }
     end
     
@@ -111,8 +111,8 @@ describe Capistrano::Notifier::Mail do
   it 'should default to whatever was specified in giturl' do
     configuration.load do |configuration|
       set :notifier_mail_options, {
-        :giturl => 'https://my.gitlab.url/',
-        :github => 'example/example'
+        giturl: 'https://my.gitlab.url/',
+        github: 'example/example'
       }
     end
     
