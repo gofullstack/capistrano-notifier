@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+    <h3>Details:</h3>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Deployer:</strong></td>
+          <td><%= user_name %></td>
+        </tr>
+        <tr>
+          <td><strong>Application:</strong></td>
+          <td><%= application.titleize %></td>
+        </tr>
+        <tr>
+          <td><strong>Branch:</strong></td>
+          <td><%= branch %></td>
+        </tr>
+        <tr>
+          <td><strong>Environment:</strong></td>
+          <td><%= stage %></td>
+        </tr>
+        <tr>
+          <td><strong>Time:</strong></td>
+          <td><%= now.strftime("%m/%d/%Y") %> at <%= now.strftime("%I:%M %p %Z") %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Compare:</h3>
+    <p><%= git_compare_prefix %>/<%= git_range.gsub('..', '...') %></p>
+
+    <h3>Commits:</h3>
+    <p><%= git_log %></p>
+
+  </body>
+</html>

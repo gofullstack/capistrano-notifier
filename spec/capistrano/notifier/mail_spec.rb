@@ -11,7 +11,8 @@ describe Capistrano::Notifier::Mail do
         github: 'example/example',
         method: :sendmail,
         from:   'sender@example.com',
-        to:     'example@example.com'
+        to:     'example@example.com',
+        format: :text
       }
 
       set :application, 'example'
@@ -22,7 +23,7 @@ describe Capistrano::Notifier::Mail do
       set :previous_revision, '890abcd0000000000000000000000000'
     end
 
-    subject.stub(:git_log).and_return <<-LOG.gsub /^ {6}/, ''
+    subject.stub(:git_log).and_return <<-LOG.gsub(/^ {6}/, '')
       1234567 This is the current commit (John Doe)
       890abcd This is the previous commit (John Doe)
     LOG
@@ -48,7 +49,7 @@ describe Capistrano::Notifier::Mail do
 
     ActionMailer::Base.deliveries.clear
   end
-  
+
   it { subject.send(:github).should         == 'example/example' }
   it { subject.send(:notify_method).should  == :sendmail }
   it { subject.send(:from).should           == 'sender@example.com' }
@@ -94,7 +95,7 @@ describe Capistrano::Notifier::Mail do
     ActionMailer::Base.deliveries.clear
   end
 
-  it "creates a subject" do
+  it 'creates a subject' do
     subject.send(:subject).should == "Example branch master deployed to test"
   end
 
@@ -104,7 +105,7 @@ describe Capistrano::Notifier::Mail do
         giturl: 'https://my.gitlab.url/',
       }
     end
-    
+
     subject.send(:git_prefix).should == 'https://my.gitlab.url/'
   end
 
@@ -115,20 +116,22 @@ describe Capistrano::Notifier::Mail do
         github: 'example/example'
       }
     end
-    
+
     subject.send(:git_prefix).should == 'https://my.gitlab.url/'
   end
 
-  it "renders a plaintext email" do
-    subject.send(:body).should == <<-BODY.gsub(/^ {6}/, '')
-      John Doe deployed
-      Example branch
-      master to
-      test on
-      01/01/2012 at
-      12:00 AM #{Time.now.zone}
+  it 'renders a plaintext email' do
+    subject.send(:text).should == <<-BODY.gsub(/^ {6}/, '')
+      Deployer: John Doe
+      Application: Example
+      Branch: master
+      Environment: test
+      Time: 01/01/2012 at 12:00 AM #{Time.now.zone}
 
-      890abcd..1234567
+      Compare:
+      https://github.com/example/example/compare/890abcd...1234567
+
+      Commits:
       1234567 This is the current commit (John Doe)
       890abcd This is the previous commit (John Doe)
 
