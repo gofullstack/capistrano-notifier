@@ -55,6 +55,24 @@ set :notifier_mail_options, {
 }
 ```
 
+### Templates
+
+This gem comes with two different templates that are used to generate the body of the email. To choose from each one of them, you can set the `format` option to either `:html` - for HTML emails - or `:text` - for plain text.
+
+The following are the default values for the template options:
+
+ - `format`: `:text`
+ - `templates_path`: `config/deploy/templates`
+ - `template`: `mail.#{format}.erb`. Note the dependency of this option on `format`.
+
+The relationship between these variables might seem a bit complex but provides great flexiility. The logic used is as follows:
+
+ - If the file exists in `#{templates_path}/#{template}`, then use that one.
+   - With no option set, this will default to `config/deploy/templates/mail.text.erb`.
+
+ - If the file doesn't exist in the previous path, load `#{template}` from one of the gem's templates, either `mail.text.erb` or `mail.html.erb`.
+   - With no options set, this will default to `mail.text.erb`.
+
 ## StatsD
 
 ```rb
