@@ -67,11 +67,9 @@ The following are the default values for the template options:
 
 The relationship between these variables might seem a bit complex but provides great flexiility. The logic used is as follows:
 
- - If the file exists in `"#{templates_path}/#{template}"`, then use that one.
-   - With no option set, this will default to `config/deploy/templates/mail.text.erb`.
+ - If the file exists in `"#{templates_path}/#{template}"`, then use that one. With no option set, this will default to `config/deploy/templates/mail.text.erb`.
 
- - If the file doesn't exist in the previous path, load `"#{template}"` from one of the gem's templates, either `mail.text.erb` or `mail.html.erb`.
-   - With no options set, this will default to `mail.text.erb` due to how the `template` option is generated. See above.
+ - If the file doesn't exist in the previous path, load `"#{template}"` from one of the gem's templates, either `mail.text.erb` or `mail.html.erb`. With no options set, this will default to `mail.text.erb` due to how the `template` option is generated. See above.
 
 ## StatsD
 
