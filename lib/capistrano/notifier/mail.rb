@@ -2,28 +2,34 @@ require 'capistrano/notifier'
 
 begin
   require 'action_mailer'
-rescue LoadError => e
+rescue LoadError
   require 'actionmailer'
 end
 
 class Capistrano::Notifier::Mailer < ActionMailer::Base
 
+  def content_type_for_format(format)
+    format == :html ? 'text/html' : 'text/plain'
+  end
+
   if ActionMailer::Base.respond_to?(:mail)
-    def notice(text, from, subject, to, delivery_method)
+    def notice(text, from, subject, to, delivery_method, format)
       mail({
         body: text,
         delivery_method: delivery_method,
+        content_type: content_type_for_format(format),
         from: from,
         subject: subject,
         to: to
       })
     end
   else
-    def notice(text, from, subject, to)
+    def notice(text, from, subject, to, format)
       body text
+      content_type content_type_for_format(format)
       from from
-      subject subject
       recipients to
+      subject subject
     end
   end
 
@@ -61,26 +67,20 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
 
   def perform_with_legacy_action_mailer(notifier = Capistrano::Notifier::Mailer)
     notifier.delivery_method = notify_method
-    notifier.deliver_notice(text, from, subject, to)
+    notifier.deliver_notice(text, from, subject, to, format)
   end
 
   def perform_with_action_mailer(notifier = Capistrano::Notifier::Mailer)
     notifier.smtp_settings = smtp_settings
-    notifier.notice(text, from, subject, to, notify_method).deliver
+    notifier.notice(text, from, subject, to, notify_method, format).deliver
   end
 
-  def body
-    <<-BODY.gsub(/^ {6}/, '')
-      #{user_name} deployed
-      #{application.titleize} branch
-      #{branch} to
-      #{stage} on
-      #{now.strftime("%m/%d/%Y")} at
-      #{now.strftime("%I:%M %p %Z")}
+  def email_template
+    cap.notifier_mail_options[:template] || "mail.#{format.to_s}.erb"
+  end
 
-      #{git_range}
-      #{git_log}
-    BODY
+  def format
+    cap.notifier_mail_options[:format] || :text
   end
 
   def from
@@ -107,14 +107,6 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     cap.notifier_mail_options[:giturl]
   end
 
-  def html
-    body.gsub(
-      /([0-9a-f]{7})\.\.([0-9a-f]{7})/, "<a href=\"#{git_compare_prefix}/\\1...\\2\">\\1..\\2</a>"
-    ).gsub(
-      /^([0-9a-f]{7})/, "<a href=\"#{git_commit_prefix}/\\0\">\\0</a>"
-    )
-  end
-
   def notify_method
     cap.notifier_mail_options[:method]
   end
@@ -127,8 +119,22 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
     "#{application.titleize} branch #{branch} deployed to #{stage}"
   end
 
+  def template(template_name)
+    config_file = "#{templates_path}/#{template_name}"
+
+    unless File.exists?(config_file)
+      config_file = File.join(File.dirname(__FILE__), "templates/#{template_name}")
+    end
+
+    ERB.new(File.read(config_file)).result(binding)
+  end
+
+  def templates_path
+    cap.notifier_mail_options[:templates_path] || 'config/deploy/templates'
+  end
+
   def text
-    body.gsub(/([0-9a-f]{7})\.\.([0-9a-f]{7})/, "#{git_compare_prefix}/\\1...\\2")
+    template(email_template)
   end
 
   def to
