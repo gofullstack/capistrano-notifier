@@ -34,7 +34,7 @@
     <p><%= git_compare_prefix %>/<%= git_range.gsub('..', '...') %></p>
 
     <h3>Commits:</h3>
-    <% git_log.split('\n').each do |commit| %>
+    <% git_log.split(/\n/).each do |commit| %>
       <p><%= commit %></p>
     <% end %>
 
