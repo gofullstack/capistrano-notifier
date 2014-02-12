@@ -77,7 +77,7 @@ For those interested in creating customized templates, it is important to know t
 <%= cap.any_variable_defined_in_capistrano %>
 ```
 
-The following is a lis of some popular variables that don't require the use of the `cap.` prefix:
+The following is a list of some popular variables that don't require the use of the `cap.` prefix:
 
  - `application`: Name of the application.
  - `branch`: Name of the branch to be deployed.
