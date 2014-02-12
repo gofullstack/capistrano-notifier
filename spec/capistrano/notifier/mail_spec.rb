@@ -172,7 +172,7 @@ describe Capistrano::Notifier::Mail do
                 </tr>
                 <tr>
                   <td><strong>Time:</strong></td>
-                  <td>01/01/2012 at 12:00 AM IST</td>
+                  <td>01/01/2012 at 12:00 AM #{Time.now.zone}</td>
                 </tr>
               </tbody>
             </table>
