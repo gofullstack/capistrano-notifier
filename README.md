@@ -65,7 +65,7 @@ The following are the default values for the template options:
  - `templates_path`: `"config/deploy/templates"`
  - `template`: `"mail.#{format}.erb"`. Note the dependency of this option on `format`.
 
-The relationship between these variables might seem a bit complex but provides great flexiility. The logic used is as follows:
+The relationship between these variables might seem a bit complex but provides great flexibility. The logic used is as follows:
 
  - If the file exists in `"#{templates_path}/#{template}"`, then use that one. With no option set, this will default to `config/deploy/templates/mail.text.erb`.
 
