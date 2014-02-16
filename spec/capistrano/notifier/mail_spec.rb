@@ -137,4 +137,56 @@ describe Capistrano::Notifier::Mail do
 
     BODY
   end
+
+  context 'given the format is set to :html' do
+    before do
+      subject.stub(:format).and_return(:html)
+    end
+
+    it 'renders an html email' do
+      subject.send(:text).should == <<-BODY.gsub(/^ {8}/, '')
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          </head>
+          <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+            <h3>Details:</h3>
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Deployer:</strong></td>
+                  <td>John Doe</td>
+                </tr>
+                <tr>
+                  <td><strong>Application:</strong></td>
+                  <td>Example</td>
+                </tr>
+                <tr>
+                  <td><strong>Branch:</strong></td>
+                  <td>master</td>
+                </tr>
+                <tr>
+                  <td><strong>Environment:</strong></td>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <td><strong>Time:</strong></td>
+                  <td>01/01/2012 at 12:00 AM #{Time.now.zone}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Compare:</h3>
+            <p>https://github.com/example/example/compare/890abcd...1234567</p>
+
+            <h3>Commits:</h3>
+              <p>1234567 This is the current commit (John Doe)</p>
+              <p>890abcd This is the previous commit (John Doe)</p>
+
+          </body>
+        </html>
+      BODY
+    end
+  end
 end

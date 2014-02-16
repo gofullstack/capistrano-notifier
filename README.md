@@ -55,6 +55,45 @@ set :notifier_mail_options, {
 }
 ```
 
+### Templates
+
+This gem comes with two different ERB templates that are used to generate the body of the email. To choose from each one of them, you can set the `format` option to either `:html` - for HTML emails - or `:text` - for plain text.
+
+The following are the default values for the template options:
+
+ - `format`: `:text`
+ - `templates_path`: `"config/deploy/templates"`
+ - `template`: `"mail.#{format}.erb"`. Note the dependency of this option on `format`.
+
+The relationship between these variables might seem a bit complex but provides great flexibility. The logic used is as follows:
+
+ - If the file exists in `"#{templates_path}/#{template}"`, then use that one. With no option set, this will default to `config/deploy/templates/mail.text.erb`.
+
+ - If the file doesn't exist in the previous path, load `"#{template}"` from one of the gem's templates, either `mail.text.erb` or `mail.html.erb`. With no options set, this will default to `mail.text.erb` due to how the `template` option is generated. See above.
+
+For those interested in creating customized templates, it is important to know that you can use any of the variables defined in capistrano by prefixing it with the `cap` method like below:
+
+```rb
+<%= cap.any_variable_defined_in_capistrano %>
+```
+
+The following is a list of some popular variables that don't require the use of the `cap.` prefix:
+
+ - `application`: Name of the application.
+ - `branch`: Name of the branch to be deployed.
+ - `git_commit_prefix`: URL of the format `"#{git_prefix}/commit"`.
+ - `git_compare_prefix`: URL of the format `"#{git_prefix}/compare"`.
+ - `git_current_version`: Commit for current revision.
+ - `git_log`: Simplified log of commits in the `git_range`.
+ - `git_prefix`: URL to the github repository. Depends on `giturl` or `github` variables.
+ - `git_previous_revision`: Commit for previous revision.
+ - `git_range`: Range of commits between previous and current revision. Example: xxx..yyy
+ - `github`: URL path to the GitHub respository. Ex: 'MyCompany/project-name'.
+ - `giturl`: Base URL to the repository.
+ - `now`: Current time.
+ - `stage`: Name of the stage from the capistrano multistage extension.
+ - `user_name`: Name of the local git author.
+
 ## StatsD
 
 ```rb
