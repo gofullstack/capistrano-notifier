@@ -81,4 +81,12 @@ set :notifier_statsd_options, {
 }
 ```
 
+You can define the pattern that will be used to define the key.
+
+```rb
+set :notifier_statsd_options, {
+  :pattern => "#{stage}.deployment.#{application}
+}
+```
+
 The `nc` ([Netcat](http://netcat.sourceforge.net/)) command is used to send messages to statsd and must be installed on the remote hosts. This is installed by default on most Unix machines.
