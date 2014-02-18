@@ -82,10 +82,14 @@ set :notifier_statsd_options, {
 ```
 
 You can define the pattern that will be used to define the key.
+In the example the key will be 'test.deployment.example'
 
 ```rb
+set :application, 'example'
+set :stage,       'test'
+
 set :notifier_statsd_options, {
-  :pattern => "#{stage}.deployment.#{application}
+  :pattern => "#{stage}.deployment.#{application}"
 }
 ```
 
