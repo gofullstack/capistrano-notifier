@@ -38,11 +38,17 @@ class Capistrano::Notifier::StatsD < Capistrano::Notifier::Base
   end
 
   def packet
-    if stage
-      "#{application}.#{stage}.deploy:#{with}"
-    else
-      "#{application}.deploy:#{with}"
-    end
+    "#{pattern}:#{with}"
+  end
+
+  def pattern
+     options.fetch(:pattern){
+       if stage
+         "#{application}.#{stage}.deploy"
+       else
+         "#{application}.deploy"
+       end
+     }
   end
 
   def port
