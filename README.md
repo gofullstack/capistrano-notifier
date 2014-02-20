@@ -83,7 +83,7 @@ The following is a list of some popular variables that don't require the use of 
  - `branch`: Name of the branch to be deployed.
  - `git_commit_prefix`: URL of the format `"#{git_prefix}/commit"`.
  - `git_compare_prefix`: URL of the format `"#{git_prefix}/compare"`.
- - `git_current_version`: Commit for current revision.
+ - `git_current_revision`: Commit for current revision.
  - `git_log`: Simplified log of commits in the `git_range`.
  - `git_prefix`: URL to the github repository. Depends on `giturl` or `github` variables.
  - `git_previous_revision`: Commit for previous revision.
