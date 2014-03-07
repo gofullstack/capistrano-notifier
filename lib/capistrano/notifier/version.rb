@@ -1,5 +1,5 @@
 module Capistrano
   module Notifier
-    VERSION = '0.2.2'
+    VERSION = '0.3.0'
   end
 end
