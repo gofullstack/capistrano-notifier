@@ -23,10 +23,11 @@ with `bundle install --binstubs` and making sure `bin` is high up in your
 require 'capistrano/notifier/mail'
 
 set :notifier_mail_options, {
-  :method => :test, # :smtp, :sendmail, or any other valid ActionMailer delivery method
-  :from   => 'capistrano@domain.com',
-  :to     => ['john@doe.com', 'jane@doe.com'],
-  :github => 'MyCompany/project-name'
+  :method  => :test, # :smtp, :sendmail, or any other valid ActionMailer delivery method
+  :from    => 'capistrano@domain.com',
+  :to      => ['john@doe.com', 'jane@doe.com'],
+  :subject => "Successfully deployed #{application.titleize} to #{stage}", # OPTIONAL
+  :github  => 'MyCompany/project-name'
 }
 ```
 
