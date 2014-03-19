@@ -116,7 +116,7 @@ class Capistrano::Notifier::Mail < Capistrano::Notifier::Base
   end
 
   def subject
-    "#{application.titleize} branch #{branch} deployed to #{stage}"
+    cap.notifier_mail_options[:subject] || "#{application.titleize} branch #{branch} deployed to #{stage}"
   end
 
   def template(template_name)
