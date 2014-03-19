@@ -99,6 +99,16 @@ describe Capistrano::Notifier::Mail do
     subject.send(:subject).should == "Example branch master deployed to test"
   end
 
+  context 'with a custom subject' do
+    it 'uses a custom subject' do
+      configuration.load do |configuration|
+        set :notifier_mail_options, subject: 'test'
+      end
+
+      expect(subject.send(:subject)).to eq 'test'
+    end
+  end
+
   it 'should work with gitlab' do
     configuration.load do |configuration|
       set :notifier_mail_options, {
