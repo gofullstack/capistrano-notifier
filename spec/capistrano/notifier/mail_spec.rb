@@ -132,11 +132,11 @@ describe Capistrano::Notifier::Mail do
 
   it 'renders a plaintext email' do
     subject.send(:text).should == <<-BODY.gsub(/^ {6}/, '')
-      Deployer: John Doe
-      Application: Example
-      Branch: master
-      Environment: test
-      Time: 01/01/2012 at 12:00 AM #{Time.now.zone}
+      Deployer:     John Doe
+      Application:  Example
+      Branch:       master
+      Environment:  test
+      Time:         01/01/2012 at 12:00 AM #{Time.now.zone}
 
       Compare:
       https://github.com/example/example/compare/890abcd...1234567
