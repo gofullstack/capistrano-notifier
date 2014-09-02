@@ -1,8 +1,8 @@
-Deployer: <%= user_name %>
-Application: <%= application.titleize %>
-Branch: <%= branch %>
-Environment: <%= stage %>
-Time: <%= now.strftime("%m/%d/%Y") %> at <%= now.strftime("%I:%M %p %Z") %>
+Deployer:     <%= user_name %>
+Application:  <%= application.titleize %>
+Branch:       <%= branch %>
+Environment:  <%= stage %>
+Time:         <%= now.strftime("%m/%d/%Y") %> at <%= now.strftime("%I:%M %p %Z") %>
 
 Compare:
 <%= git_compare_prefix %>/<%= git_range.gsub('..', '...') %>
