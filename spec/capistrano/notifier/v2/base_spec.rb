@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'capistrano/notifier'
-require 'capistrano/notifier/base'
+require 'capistrano/notifier/v2/base'
 
-describe Capistrano::Notifier::Base do
+describe Capistrano::Notifier::V2::Base do
   let(:configuration) { Capistrano::Configuration.new }
   subject { described_class.new configuration }
 

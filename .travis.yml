@@ -1,7 +1,7 @@
 env:
-  - RAILS_VERSION=none
-  - RAILS_VERSION=3.2
-  - RAILS_VERSION=4.0
+  - RAILS_VERSION=none capistrano=2.15.5
+  - RAILS_VERSION=3.2 capistrano=2.15.5
+  - RAILS_VERSION=4.0 capistrano=2.15.5
 rvm:
   - 1.9.3
   - 2.0.0

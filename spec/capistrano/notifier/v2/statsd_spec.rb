@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'capistrano/notifier/statsd'
+require 'capistrano/notifier/v2/statsd'
 
-describe Capistrano::Notifier::StatsD do
+describe Capistrano::Notifier::V2::StatsD do
   let(:configuration) { Capistrano::Configuration.new }
   subject { described_class.new configuration }
 
