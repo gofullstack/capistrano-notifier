@@ -5,7 +5,7 @@ Environment:  <%= stage %>
 Time:         <%= now.strftime("%m/%d/%Y") %> at <%= now.strftime("%I:%M %p %Z") %>
 
 Compare:
-<%= git_compare_prefix %>/<%= git_range.gsub('..', '...') %>
+<%= git_compare_prefix %>/<%=git_range %>
 
 Commits:
 <%= git_log %>
