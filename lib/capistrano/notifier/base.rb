@@ -34,7 +34,7 @@ class Capistrano::Notifier::Base
   def git_range
     return unless git_previous_revision && git_current_revision
 
-    "#{git_previous_revision[2..8]}...#{git_current_revision[2..8]}"
+    "#{git_previous_revision.gsub("\r\n","")}...#{git_current_revision.gsub("\r\n","")}"
   end
 
   def now
